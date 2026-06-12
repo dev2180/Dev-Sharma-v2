@@ -28,6 +28,18 @@ export function GsapController() {
           });
         });
 
+        // Player stat bars fill when scrolled into view
+        gsap.utils.toArray<HTMLElement>(".stat-anim").forEach((el) => {
+          const v = Number(el.dataset.value || 0);
+          gsap.to(el, {
+            width: `${v}%`,
+            duration: 1.5,
+            ease: "power3.out",
+            delay: 0.6,
+            scrollTrigger: { trigger: el, start: "top 92%" },
+          });
+        });
+
         // Hero entrance: words + sub + CTAs stagger in once experience starts
         gsap.from(".hero-word", {
           opacity: 0,

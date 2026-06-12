@@ -42,8 +42,8 @@ export function Typewriter() {
   }, [text, deleting, phraseIdx]);
 
   return (
-    <span className="font-display text-sm md:text-base" style={{ color: "var(--color-text-dim)" }}>
-      {text}
+    <span className="font-mono" style={{ color: "var(--cyan)", fontSize: "0.82rem", letterSpacing: "0.06em" }}>
+      &gt;_ {text}
       <span className="typewriter-caret" />
     </span>
   );

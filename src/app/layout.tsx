@@ -1,26 +1,35 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter } from "next/font/google";
+import { Orbitron, Rajdhani, Share_Tech_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroller } from "@/components/SmoothScroller";
 import { GsapController } from "@/components/GsapController";
-import { CanvasBackground } from "@/components/CanvasBackground";
+import { GridBackground } from "@/components/GridBackground";
 import { SpaceCursor } from "@/components/SpaceCursor";
-import { AudioPlayer } from "@/components/AudioPlayer";
+import { SoundSystem } from "@/components/SoundSystem";
+import { BootLoader } from "@/components/BootLoader";
 
-const spaceGrotesk = Space_Grotesk({
-  weight: ["400", "500", "600", "700"],
+const orbitron = Orbitron({
+  weight: ["500", "600", "700", "800", "900"],
   subsets: ["latin"],
   variable: "--font-display",
 });
 
-const inter = Inter({
+const rajdhani = Rajdhani({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-body",
 });
 
+const shareTechMono = Share_Tech_Mono({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
+
 export const metadata: Metadata = {
   title: "Dev Sharma — GenAI Engineer",
-  description: "GenAI Engineer specialising in agentic pipelines, RAG systems and LangGraph. Currently building production AI workflows at Astroraaga.",
+  description:
+    "GenAI Engineer specialising in agentic pipelines, RAG systems and LangGraph. Currently building production AI workflows at Astroraaga.",
 };
 
 export default function RootLayout({
@@ -45,59 +54,36 @@ export default function RootLayout({
                     var now = Date.now();
                     var urlParams = new URLSearchParams(window.location.search);
                     var lastReload = urlParams.get('r');
-                    
                     if (!lastReload) {
-                      try {
-                        lastReload = window.sessionStorage ? window.sessionStorage.getItem('last_chunk_reload') : null;
-                      } catch (err) {
-                        console.warn('sessionStorage access blocked:', err);
-                      }
+                      try { lastReload = window.sessionStorage ? window.sessionStorage.getItem('last_chunk_reload') : null; } catch (err) {}
                     }
-                    
                     if (!lastReload || (now - parseInt(lastReload, 10)) > 10000) {
-                      try {
-                        if (window.sessionStorage) {
-                          window.sessionStorage.setItem('last_chunk_reload', now.toString());
-                        }
-                      } catch (err) {
-                        console.warn('sessionStorage set blocked:', err);
-                      }
-                      console.warn('Chunk load error caught. Auto-recovering...');
-                      
+                      try { if (window.sessionStorage) window.sessionStorage.setItem('last_chunk_reload', now.toString()); } catch (err) {}
                       var newSearch = new URLSearchParams(window.location.search);
                       newSearch.set('r', now.toString());
                       window.location.search = newSearch.toString();
-                    } else {
-                      console.error('Multiple chunk load errors within 10 seconds. Halting recovery to prevent loop.');
                     }
                   }
-                } catch (handlerErr) {
-                  console.error('Error in ChunkLoadError handler:', handlerErr);
-                }
+                } catch (handlerErr) {}
               });
-
-              // Clear active service workers from previous site versions to prevent cache collisions
-              try {
-                if (typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
-                  navigator.serviceWorker.register('/Dev-Sharma/sw.js').catch(function (err) { console.warn('SW registration failed:', err); });
-                }
-              } catch (swErr) {
-                console.error('Service worker registration failed:', swErr);
-              }
-            `
+            `,
           }}
         />
       </head>
       <body
         suppressHydrationWarning
-        className={`${spaceGrotesk.variable} ${inter.variable} font-body antialiased bg-black text-white selection:bg-white selection:text-black cursor-none`}
+        className={`${orbitron.variable} ${rajdhani.variable} ${shareTechMono.variable} font-body antialiased`}
       >
         <SpaceCursor />
-        <AudioPlayer />
-        <CanvasBackground />
+        <BootLoader />
+        <SoundSystem />
+        <GridBackground />
         <SmoothScroller />
         <GsapController />
         {children}
+        {/* CRT atmosphere */}
+        <div className="scanlines" />
+        <div className="crt-vignette" />
       </body>
     </html>
   );

@@ -1,238 +1,171 @@
+import Link from "next/link";
 import {
-  ArrowUpRight, GithubLogo, LinkedinLogo, ArrowDown,
-  Code, Brain, TerminalWindow,
-  Cpu, Sparkle,
-  Envelope, CaretRight,
+  ArrowUpRight, GithubLogo, LinkedinLogo,
+  Envelope,
 } from "@/components/ClientIcons";
+import { Nav } from "@/components/Nav";
 import { ShaderCanvas } from "@/components/ShaderCanvas";
 import { TiltCard } from "@/components/TiltCard";
 import { Typewriter } from "@/components/Typewriter";
-
-const STATS = [
-  { number: "−70%", label: "Inference cost", sub: "via prompt engineering & token budgeting at Astroraaga" },
-  { number: "−50%", label: "Pipeline latency", sub: "optimizing a production GenAI pipeline end-to-end" },
-  { number: "+40%", label: "Retrieval coverage", sub: "hybrid dense + BM25 + CrossEncoder reranking" },
-  { number: "−60%", label: "Debug time", sub: "restructuring LangGraph into modular architecture" },
-];
+import { DemoPlayer } from "@/components/DemoPlayer";
+import { DOSSIERS } from "@/lib/projects";
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
 
-// Duplicated significantly so the marquee never resets visually mid-screen
 const SKILLS_ROW1 = Array(4).fill(["Python","LangGraph","FastAPI","QdrantDB","Redis","Ollama"]).flat();
 const SKILLS_ROW2 = Array(4).fill(["RAG Systems","Prompt Engineering","ComfyUI","Hugging Face","FFmpeg","NumPy"]).flat();
 
-const EXPERIENCE = [
+const PLAYER_STATS = [
+  { label: "RAG SYSTEMS", value: 92 },
+  { label: "AGENTIC PIPELINES", value: 88 },
+  { label: "PROMPT ENGINEERING", value: 90 },
+  { label: "BACKEND INFRA", value: 78 },
+];
+
+const ACHIEVEMENTS = [
+  { value: "−70%", label: "INFERENCE COST", sub: "prompt engineering + token budgeting" },
+  { value: "−50%", label: "PIPELINE LATENCY", sub: "production GenAI optimization" },
+  { value: "+40%", label: "RETRIEVAL COVERAGE", sub: "hybrid RRF + reranking" },
+  { value: "−60%", label: "DEBUG TIME", sub: "modular LangGraph rebuild" },
+];
+
+const CAREER_LOG = [
   {
     role: "GenAI Engineer Intern",
     company: "Astroraaga",
-    period: "Apr 2026 – Present",
-    tags: ["LangGraph","RAG","Prompt Eng"],
+    period: "APR 2026 — PRESENT",
+    status: "ACTIVE",
     bullets: [
-      "Restructured LangGraph pipeline into a modular architecture — −60% debug time, +40% dev velocity.",
+      "Restructured LangGraph pipeline into modular architecture — −60% debug time, +40% dev velocity.",
       "Optimized production GenAI pipeline via prompt engineering & token budgeting — −50% latency, −70% cost.",
-      "Contributing across backend infra, optimisation, and US-timezone production operations.",
+      "Backend infra, optimisation, and US-timezone production operations.",
     ],
-    metrics: ["-50% latency", "-70% cost", "-60% debug"],
+    tags: ["LangGraph","RAG","Prompt Eng"],
   },
   {
     role: "Python Developer Intern",
     company: "SovereigntLabs (web3)",
-    period: "Oct 2024 – Feb 2025",
-    tags: ["Python","DeepFace","AI Auth"],
+    period: "OCT 2024 — FEB 2025",
+    status: "COMPLETE",
     bullets: [
-      "Led team to design and build AI face-auth system using DeepFace and Python, owning core architecture.",
-      "Implemented facial encoding to generate unique text-based codes for secure user login — first end-to-end production system.",
+      "Led team building an AI face-auth system with DeepFace, owning core architecture.",
+      "Facial encoding → unique text-based codes for secure login — first end-to-end production system.",
     ],
-    metrics: ["End-to-end owned", "Face auth prod"],
+    tags: ["Python","DeepFace","AI Auth"],
   },
 ];
 
-const PROJECTS = [
-  {
-    id: "rag",
-    title: "RAG Knowledge QA System",
-    description: "Production hybrid RAG pipeline: QdrantDB dense retrieval + BM25 sparse + CrossEncoder reranking. +40% retrieval coverage, −60% low-quality chunks filtered before LLM generation.",
-    stack: ["Python","FastAPI","Redis","QdrantDB","Ollama","NLTK"],
-    stat: "+40% coverage",
-    icon: <Brain size={28} weight="duotone" />,
-    span: "col-span-12 md:col-span-8",
-    tall: true,
-    href: "https://github.com/dev2180/rag-async-chat",
-    shaderType: "liquid" as const,
-  },
-  {
-    id: "deadcrypt",
-    title: "DeadCrypt",
-    description: "Binary → RGB pixel video encoding. Maps arbitrary files to video via pixel values. Lossless FFV1 codec.",
-    stack: ["Python","NumPy","Pillow","FFmpeg"],
-    stat: "Systems-level",
-    icon: <TerminalWindow size={28} weight="duotone" />,
-    span: "col-span-12 md:col-span-4",
-    tall: false,
-    href: "https://github.com/dev2180/DeadCrypt",
-    shaderType: "digital" as const,
-  },
-  {
-    id: "building",
-    title: "Currently Building",
-    description: "Next project in stealth. Stay tuned on LinkedIn → #0to100Xengineer.",
-    stack: [],
-    stat: "Stealth mode",
-    icon: <Sparkle size={28} weight="duotone" />,
-    span: "col-span-12 md:col-span-4",
-    tall: false,
-    href: "https://www.linkedin.com/in/dev-sharma-a33214256/",
-    shaderType: "stealth" as const,
-  },
-  {
-    id: "cohort",
-    title: "100xEngineers Cohort",
-    description: "ComfyUI · SDXL · FLUX · LoRA training on Hugging Face. Sharing weekly AI engineering learnings publicly.",
-    stack: ["ComfyUI","SDXL","FLUX","LoRA"],
-    stat: "Mar 2026–Now",
-    icon: <Cpu size={28} weight="duotone" />,
-    span: "col-span-12 md:col-span-8",
-    tall: false,
-    href: "https://www.linkedin.com/in/dev-sharma-a33214256/",
-    shaderType: "neural" as const,
-  },
-];
-
-const LI_POSTS = [
+const TRANSMISSIONS = [
   {
     tag: "#0to100Xengineer",
-    excerpt: "Built a production hybrid RAG pipeline this week — combining BM25 sparse retrieval with dense QdrantDB vectors. The CrossEncoder reranking step alone cut irrelevant chunks by 60%...",
-    likes: "142",
-    comments: "18",
-    href: "https://www.linkedin.com/in/dev-sharma-a33214256/",
+    excerpt: "Built a production hybrid RAG pipeline this week — BM25 sparse + dense QdrantDB vectors. CrossEncoder reranking alone cut irrelevant chunks by 60%...",
+    likes: "142", comments: "18",
   },
   {
-    tag: "Prompt Engineering",
-    excerpt: "Reduced LLM inference cost by 70% without touching the model. Token budgeting + response trimming + model switching. Here's the exact playbook I used at Astroraaga...",
-    likes: "208",
-    comments: "31",
-    href: "https://www.linkedin.com/in/dev-sharma-a33214256/",
+    tag: "PROMPT ENGINEERING",
+    excerpt: "Reduced LLM inference cost by 70% without touching the model. Token budgeting + response trimming + model switching. The exact playbook...",
+    likes: "208", comments: "31",
   },
   {
-    tag: "ComfyUI + FLUX",
-    excerpt: "Trained a custom LoRA on FLUX for a client project using Hugging Face. The quality jump over SDXL base is insane. Here's the training config breakdown...",
-    likes: "176",
-    comments: "22",
-    href: "https://www.linkedin.com/in/dev-sharma-a33214256/",
+    tag: "COMFYUI + FLUX",
+    excerpt: "Trained a custom LoRA on FLUX for a client project on Hugging Face. The quality jump over SDXL base is insane. Training config breakdown...",
+    likes: "176", comments: "22",
   },
 ];
 
-// ─── COMPONENTS ───────────────────────────────────────────────────────────────
+const LINKEDIN = "https://www.linkedin.com/in/dev-sharma-a33214256/";
+const SHADERS: Record<string, "liquid" | "digital" | "stealth" | "neural"> = {
+  "d-rag": "liquid",
+  "deadcrypt": "digital",
+};
 
-function Nav() {
+// ─── SECTIONS ────────────────────────────────────────────────────────────────
+
+function Hero() {
   return (
-    <nav className="navbar-custom">
-      <span className="nav-logo">DevSharma</span>
-      <div className="nav-links-container">
-        {["About","Work","Projects","Writing"].map((l) => (
-          <a key={l} href={`#${l.toLowerCase()}`} className="nav-link-item">{l}</a>
-        ))}
-      </div>
-      <div className="flex items-center gap-3">
-        <a
-          href="https://github.com/dev2180" target="_blank" rel="noopener noreferrer"
-          aria-label="GitHub"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white transition-colors duration-300"
-          style={{ backgroundColor: "rgba(255,255,255,0.06)" }}
-        >
-          <GithubLogo size={15} weight="fill" />
-        </a>
-        <a
-          href="https://www.linkedin.com/in/dev-sharma-a33214256/" target="_blank" rel="noopener noreferrer"
-          aria-label="LinkedIn"
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-white/60 hover:text-white transition-colors duration-300"
-          style={{ backgroundColor: "rgba(255,255,255,0.06)" }}
-        >
-          <LinkedinLogo size={15} weight="fill" />
-        </a>
-        <a
-          href="https://docs.google.com/document/d/18qKvb34XjSTxdSJBjIRYYcfWa9R1MZS5/edit?usp=sharing&ouid=101310281811549086582&rtpof=true&sd=true"
-          target="_blank" rel="noopener noreferrer"
-          className="nav-resume-btn"
-        >
-          Resume
-          <span className="nav-resume-btn-icon">
-            <ArrowUpRight size={10} weight="bold" />
-          </span>
-        </a>
-      </div>
-    </nav>
-  );
-}
-
-function Hero({ isClone = false }: { isClone?: boolean }) {
-  return (
-    <section
-      id={isClone ? undefined : "about"}
-      className="relative w-full overflow-hidden max-w-7xl mx-auto px-6"
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        textAlign: "left",
-        paddingTop: "8rem",
-        paddingBottom: "6rem",
-      }}
-    >
-      {/* eyebrow — orange dash + spaced uppercase, like the reference */}
-      <p className="eyebrow mb-7">Dev Sharma · GenAI Engineer</p>
-
-      {/* headline — left-aligned, tight Space Grotesk, orange accent word */}
-      <h1 className="leading-[1.0] font-display font-bold mb-7 max-w-4xl text-balance" style={{ fontSize: "var(--text-hero)", letterSpacing: "-0.04em" }}>
-        <span className="hero-word block text-white">I build systems</span>
-        <span className="hero-word block text-white">
-          that <span className="inline-block animate-breath" style={{ color: "var(--color-accent)" }}>think.</span>
-        </span>
-      </h1>
-
-      {/* sub copy */}
-      <p className="hero-sub text-base leading-relaxed max-w-xl text-balance" style={{ color: "var(--color-text-dim)", marginBottom: "1.25rem" }}>
-        Deep agentic pipelines, RAG systems, and production GenAI workflows
-        — currently building at <strong style={{ color: "var(--color-accent)" }}>Astroraaga</strong>.
-      </p>
-
-      {/* typewriter line */}
-      <div className="hero-sub" style={{ marginBottom: "3rem", minHeight: "1.6rem" }}>
-        {!isClone && <Typewriter />}
-      </div>
-
-      {/* CTAs — LatentGraph button trio */}
-      <div className="hero-ctas flex flex-wrap gap-4" style={{ marginBottom: "5rem" }}>
-        <a href="#projects" className="btn-primary group">
-          <Code size={15} weight="bold" />
-          View Projects
-        </a>
-        <a href="https://github.com/dev2180" target="_blank" rel="noopener noreferrer" className="btn-ghost group">
-          GitHub
-          <ArrowUpRight size={13} weight="bold" className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-        </a>
-        <a href="https://www.linkedin.com/in/dev-sharma-a33214256/" target="_blank" rel="noopener noreferrer" className="btn-neutral">
-          LinkedIn
-        </a>
-      </div>
-
-      {/* stats band — big orange numbers, divider columns */}
-      <div className="stats-band reveal">
-        {STATS.map((s) => (
-          <div key={s.label} className="stat-cell">
-            <p className="stat-number">{s.number}</p>
-            <p className="stat-label">{s.label}</p>
-            <p className="stat-sub">{s.sub}</p>
+    <section id="about" className="relative w-full max-w-7xl mx-auto px-6" style={{ minHeight: "100vh", display: "flex", alignItems: "center", paddingTop: "7rem", paddingBottom: "4rem" }}>
+      <div className="grid grid-cols-12 gap-8 w-full items-center">
+        {/* left: headline */}
+        <div className="col-span-12 md:col-span-8">
+          <p className="hud-label hero-sub" style={{ marginBottom: "1.6rem" }}>PLAYER ONE // GENAI ENGINEER</p>
+          <h1 className="font-display" style={{ fontSize: "var(--text-hero)", fontWeight: 900, lineHeight: 1.04, marginBottom: "1.4rem" }}>
+            <span className="hero-word block" style={{ color: "var(--text)" }}>I BUILD SYSTEMS</span>
+            <span className="hero-word block">
+              <span style={{ color: "var(--text)" }}>THAT </span>
+              <span className="neon glitch" data-text="THINK.">THINK.</span>
+            </span>
+          </h1>
+          <p className="hero-sub" style={{ color: "var(--text-dim)", fontSize: "1.05rem", maxWidth: "34rem", lineHeight: 1.7, marginBottom: "0.9rem" }}>
+            Agentic pipelines, RAG systems and production GenAI workflows —
+            currently running live ops at <strong style={{ color: "var(--primary)" }}>Astroraaga</strong>.
+          </p>
+          <div className="hero-sub" style={{ minHeight: "1.7rem", marginBottom: "2.6rem" }}>
+            <Typewriter />
           </div>
-        ))}
+          <div className="hero-ctas flex flex-wrap gap-4">
+            <a href="#missions" className="btn-grid">▸ VIEW MISSIONS</a>
+            <a href="#demo" className="btn-grid-ghost">WATCH DEMO</a>
+            <a href="https://github.com/dev2180" target="_blank" rel="noopener noreferrer" className="btn-grid-dim">
+              GITHUB <ArrowUpRight size={12} weight="bold" />
+            </a>
+          </div>
+        </div>
+
+        {/* right: player card */}
+        <div className="col-span-12 md:col-span-4 hero-sub">
+          <div className="hud-panel hud-corners p-6" style={{ position: "relative" }}>
+            <span className="hud-c" />
+            <div className="flex items-center justify-between" style={{ marginBottom: "1.3rem" }}>
+              <span className="font-mono" style={{ fontSize: "0.62rem", letterSpacing: "0.3em", color: "var(--text-mute)" }}>PLAYER STATS</span>
+              <span className="font-mono" style={{ fontSize: "0.62rem", letterSpacing: "0.2em", color: "var(--green)" }}>● ONLINE</span>
+            </div>
+            <div className="flex items-center gap-4" style={{ marginBottom: "1.5rem" }}>
+              <div className="flex items-center justify-center font-display neon" style={{ width: 54, height: 54, border: "1px solid rgba(255,115,32,0.5)", fontSize: "1.3rem", fontWeight: 800 }}>
+                DS
+              </div>
+              <div>
+                <p className="font-display" style={{ fontSize: "0.95rem", fontWeight: 700, letterSpacing: "0.08em" }}>DEV SHARMA</p>
+                <p className="font-mono" style={{ fontSize: "0.6rem", letterSpacing: "0.24em", color: "var(--cyan)" }}>CLASS: GENAI ENGINEER</p>
+              </div>
+            </div>
+            {PLAYER_STATS.map((s) => (
+              <div key={s.label} style={{ marginBottom: "0.9rem" }}>
+                <div className="flex justify-between font-mono" style={{ fontSize: "0.58rem", letterSpacing: "0.22em", color: "var(--text-dim)", marginBottom: 5 }}>
+                  <span>{s.label}</span>
+                  <span style={{ color: "var(--primary)" }}>{s.value}</span>
+                </div>
+                <div className="stat-bar-track">
+                  <div className="stat-bar-fill stat-anim" data-value={s.value} />
+                </div>
+              </div>
+            ))}
+            <div className="flex justify-between font-mono" style={{ fontSize: "0.58rem", letterSpacing: "0.22em", color: "var(--text-mute)", marginTop: "1.2rem", paddingTop: "1rem", borderTop: "1px solid var(--line-dim)" }}>
+              <span>LVL 21</span>
+              <span>XP: SHIPPING WEEKLY</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* scroll hint */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/20">
-        <span className="text-[10px] tracking-widest uppercase">Scroll</span>
-        <ArrowDown size={14} className="animate-bounce" />
+      <div className="absolute font-mono" style={{ bottom: "1.8rem", left: "50%", transform: "translateX(-50%)", fontSize: "0.58rem", letterSpacing: "0.4em", color: "var(--text-mute)" }}>
+        ▼ SCROLL TO DESCEND
+      </div>
+    </section>
+  );
+}
+
+function Achievements() {
+  return (
+    <section className="w-full max-w-7xl mx-auto px-6" style={{ paddingBottom: "5rem" }}>
+      <div className="reveal grid grid-cols-12" style={{ border: "1px solid var(--line)", background: "var(--bg-panel)" }}>
+        {ACHIEVEMENTS.map((a, i) => (
+          <div key={a.label} className="col-span-12 md:col-span-3 p-6" style={{ borderRight: i < 3 ? "1px solid var(--line-dim)" : "none" }}>
+            <p className="font-display neon" style={{ fontSize: "clamp(1.6rem, 2.4vw, 2.2rem)", fontWeight: 800 }}>{a.value}</p>
+            <p className="font-display" style={{ fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.14em", marginTop: 6 }}>{a.label}</p>
+            <p className="font-mono" style={{ fontSize: "0.6rem", color: "var(--text-mute)", letterSpacing: "0.08em", marginTop: 4, textTransform: "uppercase" }}>{a.sub}</p>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -240,70 +173,152 @@ function Hero({ isClone = false }: { isClone?: boolean }) {
 
 function Marquee() {
   return (
-    <section className="w-full py-16 overflow-hidden border-y border-white/5 bg-black/40" style={{ borderTop: "1px solid rgba(255,255,255,0.05)", borderBottom: "1px solid rgba(255,255,255,0.05)", backgroundColor: "rgba(0,0,0,0.4)" }}>
-      <div className="overflow-hidden mb-4">
+    <section className="w-full py-16" style={{ overflow: "hidden", borderTop: "1px solid var(--line-dim)", borderBottom: "1px solid var(--line-dim)", background: "rgba(4,6,10,0.5)" }}>
+      <div style={{ overflow: "hidden", marginBottom: "0.9rem" }}>
         <div className="marquee-track-left">
-          {SKILLS_ROW1.map((s, i) => (
-            <span key={i} className="flex-shrink-0 px-5 py-2 rounded-full border border-white/10 bg-white/5 text-white/60 text-xs font-bold tracking-[0.15em] uppercase hover:text-[#E1642E] transition-colors duration-300" style={{ padding: "0.5rem 1.25rem", borderRadius: "9999px", border: "1px solid rgba(255,255,255,0.1)", backgroundColor: "rgba(255,255,255,0.05)" }}>
-              {s}
-            </span>
-          ))}
+          {SKILLS_ROW1.map((s, i) => <span key={i} className="chip">{s}</span>)}
         </div>
       </div>
-      <div className="overflow-hidden">
+      <div style={{ overflow: "hidden" }}>
         <div className="marquee-track-right">
-          {SKILLS_ROW2.map((s, i) => (
-            <span key={i} className="flex-shrink-0 px-5 py-2 rounded-full border border-white/10 bg-white/5 text-white/60 text-xs font-bold tracking-[0.15em] uppercase hover:text-[#E1642E] transition-colors duration-300" style={{ padding: "0.5rem 1.25rem", borderRadius: "9999px", border: "1px solid rgba(255,255,255,0.1)", backgroundColor: "rgba(255,255,255,0.05)" }}>
-              {s}
-            </span>
-          ))}
+          {SKILLS_ROW2.map((s, i) => <span key={i} className="chip">{s}</span>)}
         </div>
       </div>
     </section>
   );
 }
 
-function Experience() {
+function Demo() {
   return (
-    <section id="work" className="w-full py-32 md:py-48 px-4 max-w-7xl mx-auto flex flex-col items-center text-center">
-      <p className="reveal eyebrow mb-5">Experience</p>
-      <h2 className="reveal font-display font-bold mb-16 mx-auto" style={{fontSize:"var(--text-section)"}}>
-        Where I&apos;ve built.
+    <section id="demo" className="w-full max-w-5xl mx-auto px-6 py-32">
+      <p className="reveal hud-label" style={{ marginBottom: "1.1rem" }}>MISSION CAPTURE // LIVE FOOTAGE</p>
+      <h2 className="reveal font-display" style={{ fontSize: "var(--text-section)", fontWeight: 800, marginBottom: "0.9rem" }}>
+        WATCH THE ENGINE <span className="neon">RUN.</span>
+      </h2>
+      <p className="reveal" style={{ color: "var(--text-dim)", maxWidth: "36rem", lineHeight: 1.7, marginBottom: "2.5rem" }}>
+        A captured session of D-RAG answering a question against real PDFs —
+        query expansion, hybrid retrieval, reranking, compression and a grounded,
+        cited answer. Press play.
+      </p>
+      <div className="reveal">
+        <DemoPlayer />
+      </div>
+    </section>
+  );
+}
+
+function Missions() {
+  return (
+    <section id="missions" className="w-full max-w-7xl mx-auto px-6 py-32">
+      <p className="reveal hud-label" style={{ marginBottom: "1.1rem" }}>MISSION SELECT</p>
+      <h2 className="reveal font-display" style={{ fontSize: "var(--text-section)", fontWeight: 800, marginBottom: "2.5rem" }}>
+        CHOOSE YOUR <span className="neon">MISSION.</span>
       </h2>
 
-      <div className="w-full space-y-0 border-t border-white/10 text-left" style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-        {EXPERIENCE.map((exp, i) => (
-          <details key={i} className="accordion-item group w-full">
-            <summary className="flex items-center justify-between py-6 cursor-pointer list-none">
-              <div className="flex items-center gap-5 overflow-hidden">
-                <span className="text-[10px] text-white/20 font-mono w-6 shrink-0">{String(i+1).padStart(2,"0")}</span>
-                <div className="min-w-0">
-                  <p className="text-lg font-bold text-white group-hover:text-[#E1642E] transition-colors duration-300 truncate">{exp.role}</p>
-                  <p className="text-sm text-white/40 truncate">{exp.company} &nbsp;·&nbsp; {exp.period}</p>
+      <div className="grid grid-cols-12 gap-5">
+        {DOSSIERS.map((d) => (
+          <div key={d.slug} className="col-span-12 md:col-span-6">
+            <TiltCard>
+              <Link href={`/projects/${d.slug}`} className="mission-card">
+                <div className="hud-panel hud-corners" style={{ position: "relative", overflow: "hidden" }}>
+                  <span className="hud-c" />
+                  <div style={{ position: "relative", height: 170, overflow: "hidden", borderBottom: "1px solid var(--line)" }}>
+                    <ShaderCanvas type={SHADERS[d.slug]} />
+                    <span className="font-mono" style={{ position: "absolute", top: 12, left: 14, fontSize: "0.6rem", letterSpacing: "0.3em", color: "var(--primary)", zIndex: 5 }}>
+                      {d.codename}
+                    </span>
+                    <span className="font-mono" style={{ position: "absolute", top: 12, right: 14, fontSize: "0.6rem", letterSpacing: "0.2em", color: "var(--green)", zIndex: 5 }}>
+                      ◉ {d.status}
+                    </span>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-display" style={{ fontSize: "1.35rem", fontWeight: 800, letterSpacing: "0.08em", marginBottom: 4 }}>{d.title}</h3>
+                    <p className="font-mono" style={{ fontSize: "0.6rem", letterSpacing: "0.26em", color: "var(--cyan)", marginBottom: 12 }}>{d.classification}</p>
+                    <p style={{ color: "var(--text-dim)", fontSize: "0.95rem", lineHeight: 1.65, marginBottom: 18 }}>{d.tagline}</p>
+                    <div className="flex flex-wrap gap-2" style={{ marginBottom: 18 }}>
+                      {d.stack.slice(0, 4).map((s) => (
+                        <span key={s.tech} className="chip" style={{ fontSize: "0.58rem", padding: "0.3rem 0.7rem" }}>{s.tech}</span>
+                      ))}
+                    </div>
+                    <span className="font-mono flex items-center gap-2" style={{ fontSize: "0.66rem", letterSpacing: "0.28em", color: "var(--primary)" }}>
+                      OPEN DOSSIER <ArrowUpRight size={11} weight="bold" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </TiltCard>
+          </div>
+        ))}
+
+        {/* side quests */}
+        <div className="col-span-12 md:col-span-6">
+          <TiltCard>
+            <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="mission-card">
+              <div className="hud-panel hud-corners p-6" style={{ position: "relative" }}>
+                <span className="hud-c" />
+                <span className="font-mono" style={{ fontSize: "0.6rem", letterSpacing: "0.3em", color: "var(--cyan)" }}>SIDE QUEST</span>
+                <h3 className="font-display" style={{ fontSize: "1.1rem", fontWeight: 800, letterSpacing: "0.08em", margin: "10px 0 6px" }}>100XENGINEERS COHORT</h3>
+                <p style={{ color: "var(--text-dim)", fontSize: "0.92rem", lineHeight: 1.6 }}>
+                  ComfyUI · SDXL · FLUX · LoRA training on Hugging Face. Weekly AI engineering learnings shared publicly.
+                </p>
+              </div>
+            </a>
+          </TiltCard>
+        </div>
+        <div className="col-span-12 md:col-span-6">
+          <TiltCard>
+            <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="mission-card">
+              <div className="hud-panel hud-corners p-6" style={{ position: "relative" }}>
+                <span className="hud-c" />
+                <span className="font-mono" style={{ fontSize: "0.6rem", letterSpacing: "0.3em", color: "var(--red)" }}>CLASSIFIED</span>
+                <h3 className="font-display" style={{ fontSize: "1.1rem", fontWeight: 800, letterSpacing: "0.08em", margin: "10px 0 6px" }}>NEXT MISSION — STEALTH</h3>
+                <p style={{ color: "var(--text-dim)", fontSize: "0.92rem", lineHeight: 1.6 }}>
+                  In development. Intel drops on LinkedIn → #0to100Xengineer.
+                </p>
+              </div>
+            </a>
+          </TiltCard>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CareerLog() {
+  return (
+    <section id="log" className="w-full max-w-5xl mx-auto px-6 py-32">
+      <p className="reveal hud-label" style={{ marginBottom: "1.1rem" }}>CAREER LOG</p>
+      <h2 className="reveal font-display" style={{ fontSize: "var(--text-section)", fontWeight: 800, marginBottom: "2.5rem" }}>
+        WHERE I&apos;VE <span className="neon">DEPLOYED.</span>
+      </h2>
+
+      <div className="flex flex-col gap-5">
+        {CAREER_LOG.map((e, i) => (
+          <details key={i} className="log-entry reveal" open={i === 0}>
+            <summary className="flex items-center justify-between p-6" style={{ cursor: "none", listStyle: "none" }}>
+              <div className="flex items-center gap-5">
+                <span className="font-mono" style={{ fontSize: "0.62rem", color: "var(--text-mute)" }}>{String(i + 1).padStart(2, "0")}</span>
+                <div>
+                  <p className="font-display" style={{ fontSize: "1.05rem", fontWeight: 700, letterSpacing: "0.06em" }}>{e.role}</p>
+                  <p className="font-mono" style={{ fontSize: "0.62rem", letterSpacing: "0.18em", color: "var(--text-dim)", marginTop: 3 }}>
+                    {e.company} · {e.period}
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <div className="hidden md:flex gap-2">
-                  {exp.metrics.map((m) => (
-                    <span key={m} className="px-3 py-1 rounded-full text-[#E1642E] text-[10px] font-bold whitespace-nowrap" style={{ backgroundColor: "rgba(225,100,46,0.1)", border: "1px solid rgba(225,100,46,0.2)", padding: "0.25rem 0.75rem", borderRadius: "9999px" }}>{m}</span>
-                  ))}
-                </div>
-                <CaretRight size={16} className="text-white/30 group-open:rotate-90 transition-transform duration-300 shrink-0" />
-              </div>
+              <span className="font-mono" style={{ fontSize: "0.6rem", letterSpacing: "0.22em", color: e.status === "ACTIVE" ? "var(--green)" : "var(--text-mute)" }}>
+                ◉ {e.status}
+              </span>
             </summary>
-            <div className="pb-8 pl-11 grid md:grid-cols-2 gap-8 w-full">
-              <ul className="space-y-3">
-                {exp.bullets.map((b, j) => (
-                  <li key={j} className="text-sm text-white/60 leading-relaxed flex gap-3 break-words">
-                    <span className="text-[#E1642E] mt-1 flex-shrink-0">›</span>
-                    <span className="min-w-0">{b}</span>
+            <div className="p-6" style={{ paddingTop: 0 }}>
+              <ul style={{ listStyle: "none", marginBottom: "1.1rem" }}>
+                {e.bullets.map((b, j) => (
+                  <li key={j} className="flex gap-3" style={{ color: "var(--text-dim)", fontSize: "0.95rem", lineHeight: 1.7, marginBottom: 6 }}>
+                    <span style={{ color: "var(--primary)" }}>▸</span>{b}
                   </li>
                 ))}
               </ul>
-              <div className="flex flex-wrap gap-2 content-start">
-                {exp.tags.map((t) => (
-                  <span key={t} className="px-3 py-1.5 rounded-full text-white/50 text-[11px] font-bold whitespace-nowrap" style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", padding: "0.375rem 0.75rem", borderRadius: "9999px" }}>{t}</span>
-                ))}
+              <div className="flex flex-wrap gap-2">
+                {e.tags.map((t) => <span key={t} className="chip" style={{ fontSize: "0.58rem", padding: "0.3rem 0.7rem" }}>{t}</span>)}
               </div>
             </div>
           </details>
@@ -313,130 +328,58 @@ function Experience() {
   );
 }
 
-function Projects() {
+function Transmissions() {
   return (
-    <section id="projects" className="w-full py-32 md:py-48 px-4 max-w-7xl mx-auto flex flex-col items-center text-center">
-      <p className="reveal eyebrow mb-5">Projects</p>
-      <h2 className="reveal font-display font-bold mb-16 mx-auto" style={{fontSize:"var(--text-section)"}}>
-        What I&apos;ve shipped.
+    <section className="w-full max-w-5xl mx-auto px-6 py-32">
+      <p className="reveal hud-label" style={{ marginBottom: "1.1rem" }}>OUTBOUND TRANSMISSIONS</p>
+      <h2 className="reveal font-display" style={{ fontSize: "var(--text-section)", fontWeight: 800, marginBottom: "0.9rem" }}>
+        WHAT I <span className="neon">BROADCAST.</span>
       </h2>
+      <p className="reveal" style={{ color: "var(--text-dim)", marginBottom: "2.5rem" }}>
+        Weekly AI engineering learnings on LinkedIn →{" "}
+        <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary)" }}>#0to100Xengineer</a>
+      </p>
 
-      <div className="w-full grid grid-cols-12 gap-4 grid-flow-dense auto-rows-auto text-left">
-        {PROJECTS.map((p) => (
-          <TiltCard key={p.id} className={p.span}>
-            <a
-              href={p.href}
-              target="_blank" rel="noopener"
-              className="project-card card-shell group block h-full"
-            >
-              <div className={`card-inner p-8 flex flex-col justify-between overflow-hidden ${p.tall ? "min-h-[360px]" : "min-h-[200px]"}`}>
-                {/* Hardware-accelerated dynamic WebGL background shader */}
-                <ShaderCanvas type={p.shaderType} />
-
-                <div className="flex items-start justify-between mb-4 relative z-10">
-                  <span className="text-[#E1642E] shrink-0">{p.icon}</span>
-                  <span className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/30 group-hover:bg-[#E1642E] group-hover:text-white group-hover:border-[#E1642E] transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] shrink-0" style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                    <ArrowUpRight size={12} weight="bold" />
-                  </span>
-                </div>
-                <div className="min-w-0 relative z-10">
-                  <h3 className="font-bold text-white text-lg mb-2 group-hover:text-[#E1642E] transition-colors duration-300 truncate">{p.title}</h3>
-                  <p className="text-sm text-white/50 leading-relaxed mb-6 break-words">{p.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {p.stack.map((s) => (
-                      <span key={s} className="px-2.5 py-1 text-[10px] font-bold tracking-wide text-white/40 rounded-full whitespace-nowrap" style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)", padding: "0.25rem 0.625rem", borderRadius: "9999px" }}>{s}</span>
-                    ))}
-                    {p.stat && (
-                      <span className="px-2.5 py-1 text-[10px] font-bold tracking-wide text-[#E1642E] rounded-full ml-auto whitespace-nowrap" style={{ backgroundColor: "rgba(225,100,46,0.1)", border: "1px solid rgba(225,100,46,0.2)", padding: "0.25rem 0.625rem", borderRadius: "9999px" }}>{p.stat}</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </a>
-          </TiltCard>
+      <div className="flex flex-col gap-4">
+        {TRANSMISSIONS.map((p, i) => (
+          <a key={i} href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="log-entry reveal p-6 flex items-center justify-between gap-6" style={{ textDecoration: "none" }}>
+            <div style={{ minWidth: 0 }}>
+              <span className="font-mono" style={{ fontSize: "0.6rem", letterSpacing: "0.26em", color: "var(--cyan)", display: "block", marginBottom: 8 }}>
+                TX-{String(i + 1).padStart(3, "0")} · {p.tag}
+              </span>
+              <p style={{ color: "var(--text-dim)", fontSize: "0.95rem", lineHeight: 1.65 }}>{p.excerpt}</p>
+            </div>
+            <div className="font-mono" style={{ fontSize: "0.62rem", color: "var(--text-mute)", whiteSpace: "nowrap" }}>
+              ▲ {p.likes} · ✦ {p.comments}
+            </div>
+          </a>
         ))}
       </div>
     </section>
   );
 }
 
-function Writing() {
+function Comms() {
   return (
-    <section id="writing" className="w-full py-32 md:py-48 px-4 max-w-7xl mx-auto flex flex-col items-center text-center">
-      <div className="mb-16">
-        <p className="reveal eyebrow mb-5 mx-auto" style={{ justifyContent: "center" }}>Writing</p>
-        <h2 className="reveal font-display font-bold mb-4 mx-auto" style={{fontSize:"var(--text-section)"}}>
-          What I share.
-        </h2>
-        <p className="reveal text-white/40 text-sm">
-          Weekly AI engineering learnings on LinkedIn &rarr;&nbsp;
-          <a href="https://www.linkedin.com/in/dev-sharma-a33214256/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--color-accent)" }}>#0to100Xengineer</a>
-        </p>
-      </div>
-
-      <div className="w-full grid gap-5 text-left">
-        {LI_POSTS.map((post, i) => (
-          <TiltCard key={i}>
-            <a
-              href={post.href}
-              target="_blank" rel="noopener noreferrer"
-              className="li-card card-shell group block h-full"
-            >
-              <div className="card-inner p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6 overflow-hidden">
-                <div className="flex-1 min-w-0">
-                  <span className="inline-block mb-4 px-3 py-1 rounded-full text-[#E1642E] text-[10px] font-bold tracking-widest whitespace-nowrap" style={{ backgroundColor: "rgba(225,100,46,0.1)", border: "1px solid rgba(225,100,46,0.2)", padding: "0.25rem 0.75rem", borderRadius: "9999px" }}>{post.tag}</span>
-                  <p className="text-sm text-white/70 leading-relaxed line-clamp-2 max-w-3xl break-words">{post.excerpt}</p>
-                </div>
-                <div className="flex md:flex-col items-center md:items-end gap-4 md:gap-2 shrink-0">
-                  <div className="flex gap-4 text-xs text-white/30 font-mono">
-                    <span>👍 {post.likes}</span>
-                    <span>💬 {post.comments}</span>
-                  </div>
-                  <span className="flex items-center gap-1.5 text-[11px] font-bold text-white/30 group-hover:text-[#E1642E] transition-colors duration-300">
-                    View post <ArrowUpRight size={11} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300 shrink-0" />
-                  </span>
-                </div>
-              </div>
-            </a>
-          </TiltCard>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="w-full py-32 md:py-48 px-4 max-w-7xl mx-auto flex flex-col items-center text-center border-t border-white/5">
-      <p className="reveal eyebrow mb-5 mx-auto" style={{ justifyContent: "center" }}>Contact</p>
-      <h2 className="reveal font-display font-bold leading-[1.02] mb-12 text-balance mx-auto" style={{fontSize:"var(--text-section)"}}>
-        Let&apos;s build something<br />
-        <span style={{ color: "var(--color-accent)" }}>that thinks.</span>
+    <footer id="comms" className="w-full max-w-5xl mx-auto px-6 py-32 text-center">
+      <p className="reveal hud-label mx-auto" style={{ marginBottom: "1.1rem", justifyContent: "center" }}>OPEN CHANNEL</p>
+      <h2 className="reveal font-display" style={{ fontSize: "var(--text-section)", fontWeight: 800, marginBottom: "2.5rem" }}>
+        LET&apos;S BUILD SOMETHING<br /><span className="neon">THAT THINKS.</span>
       </h2>
-      <div className="flex flex-wrap gap-4 mb-16 justify-center">
-        <a href="mailto:dev.sra2180@gmail.com"
-          className="group flex items-center justify-center gap-3 pl-2 pr-5 py-2 rounded-full bg-white/5 border border-white/15 text-white font-bold text-sm hover:bg-white/10 transition-all duration-[600ms] ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95">
-          <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300">
-            <Envelope size={14} weight="duotone" />
-          </span>
-          dev.sra2180@gmail.com
+      <div className="reveal flex flex-wrap gap-4 justify-center" style={{ marginBottom: "4rem" }}>
+        <a href="mailto:dev.sra2180@gmail.com" className="btn-grid">
+          <Envelope size={14} weight="bold" /> TRANSMIT MESSAGE
         </a>
-        <a href="https://www.linkedin.com/in/dev-sharma-a33214256/" target="_blank" rel="noopener noreferrer"
-          className="group flex items-center justify-center gap-3 pl-2 pr-5 py-2 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/30 text-white font-bold text-sm hover:bg-[#0A66C2]/20 transition-all duration-[600ms] ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95">
-          <span className="w-8 h-8 rounded-full bg-[#0A66C2]/20 flex items-center justify-center group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300">
-            <LinkedinLogo size={14} weight="fill" />
-          </span>
-          LinkedIn
+        <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="btn-grid-ghost">
+          <LinkedinLogo size={14} weight="fill" /> LINKEDIN
         </a>
-        <a href="https://github.com/dev2180" target="_blank" rel="noopener noreferrer"
-          className="group flex items-center justify-center gap-3 pl-2 pr-5 py-2 rounded-full bg-white/5 border border-white/15 text-white font-bold text-sm hover:bg-white/10 transition-all duration-[600ms] ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-95">
-          <span className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300">
-            <GithubLogo size={14} weight="fill" />
-          </span>
-          GitHub
+        <a href="https://github.com/dev2180" target="_blank" rel="noopener noreferrer" className="btn-grid-dim">
+          <GithubLogo size={14} weight="fill" /> GITHUB
         </a>
       </div>
-      <p className="text-xs text-white/20 font-mono">© 2026 Dev Sharma · Built with Next.js + GSAP + Lenis</p>
+      <p className="font-mono" style={{ fontSize: "0.6rem", letterSpacing: "0.24em", color: "var(--text-mute)" }}>
+        © 2026 DEV SHARMA · GRID OS · NEXT.JS + GSAP + WEB AUDIO
+      </p>
     </footer>
   );
 }
@@ -445,19 +388,16 @@ function Footer() {
 
 export default function Home() {
   return (
-    <main className="overflow-x-hidden w-full max-w-full">
+    <main className="overflow-x-hidden w-full">
       <Nav />
       <Hero />
+      <Achievements />
       <Marquee />
-      <Experience />
-      <Projects />
-      <Writing />
-      <Footer />
-      {/* Cloned Hero for seamless infinite scroll looping */}
-      <div aria-hidden="true" className="pointer-events-none select-none">
-        <Hero isClone={true} />
-      </div>
+      <Missions />
+      <Demo />
+      <CareerLog />
+      <Transmissions />
+      <Comms />
     </main>
   );
 }
-
