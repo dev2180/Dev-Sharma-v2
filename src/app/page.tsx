@@ -333,27 +333,50 @@ function Transmissions() {
     <section className="w-full max-w-5xl mx-auto px-6 py-32">
       <p className="reveal hud-label" style={{ marginBottom: "1.1rem" }}>OUTBOUND TRANSMISSIONS</p>
       <h2 className="reveal font-display" style={{ fontSize: "var(--text-section)", fontWeight: 800, marginBottom: "0.9rem" }}>
-        WHAT I <span className="neon">BROADCAST.</span>
+        WHAT I BROADCAST.<br />
+        <span className="neon">REAL NUMBERS.</span> REAL BUILDS.
       </h2>
-      <p className="reveal" style={{ color: "var(--text-dim)", marginBottom: "2.5rem" }}>
-        Weekly AI engineering learnings on LinkedIn →{" "}
-        <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" style={{ color: "var(--primary)" }}>#0to100Xengineer</a>
+      <p className="reveal" style={{ color: "var(--text-dim)", marginBottom: "2.5rem", maxWidth: "36rem", lineHeight: 1.7 }}>
+        Weekly AI engineering learnings on LinkedIn — every post backed by something
+        actually shipped that week.
       </p>
 
-      <div className="flex flex-col gap-4">
+      {/* stat strip — benchmark style */}
+      <div className="reveal bench-strip">
+        <div className="bench-strip-cell"><p className="v">208</p><p className="l">PEAK REACTIONS</p></div>
+        <div className="bench-strip-cell"><p className="v">526</p><p className="l">TOTAL REACTIONS</p></div>
+        <div className="bench-strip-cell"><p className="v">71</p><p className="l">COMMENTS</p></div>
+        <div className="bench-strip-cell"><p className="v">1×</p><p className="l">WEEKLY DROPS</p></div>
+      </div>
+
+      {/* row table — highlighted hot row, big number column */}
+      <div className="reveal bench-table">
         {TRANSMISSIONS.map((p, i) => (
-          <a key={i} href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="log-entry reveal p-6 flex items-center justify-between gap-6" style={{ textDecoration: "none" }}>
-            <div style={{ minWidth: 0 }}>
-              <span className="font-mono" style={{ fontSize: "0.6rem", letterSpacing: "0.26em", color: "var(--cyan)", display: "block", marginBottom: 8 }}>
-                TX-{String(i + 1).padStart(3, "0")} · {p.tag}
-              </span>
-              <p style={{ color: "var(--text-dim)", fontSize: "0.95rem", lineHeight: 1.65 }}>{p.excerpt}</p>
+          <a
+            key={i}
+            href={LINKEDIN}
+            target="_blank" rel="noopener noreferrer"
+            className={`bench-row ${p.likes === "208" ? "hot" : ""}`}
+          >
+            <div className="cell-label">
+              <span className="cell-icon">{["◈", "▲", "✦"][i % 3]}</span>
+              <div>
+                <p className="font-mono" style={{ fontSize: "0.56rem", letterSpacing: "0.22em", color: "var(--cyan)" }}>TX-{String(i + 1).padStart(3, "0")}</p>
+                <p className="font-display" style={{ fontSize: "0.74rem", fontWeight: 700, letterSpacing: "0.08em", marginTop: 3, textTransform: "uppercase" }}>{p.tag}</p>
+              </div>
             </div>
-            <div className="font-mono" style={{ fontSize: "0.62rem", color: "var(--text-mute)", whiteSpace: "nowrap" }}>
-              ▲ {p.likes} · ✦ {p.comments}
-            </div>
+            <div className="cell-body">{p.excerpt}</div>
+            <div className="cell-num">{p.likes}</div>
           </a>
         ))}
+      </div>
+
+      {/* centered CTA + mono sublinks — benchmark style */}
+      <div className="reveal bench-footer">
+        <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" className="btn-grid">
+          FOLLOW THE BROADCAST →
+        </a>
+        <p className="bench-footer-links">#0TO100XENGINEER · WEEKLY DROPS · LINKEDIN</p>
       </div>
     </section>
   );

@@ -26,14 +26,6 @@ export function BootLoader() {
   const [gone, setGone] = useState(false);
   const termRef = useRef<HTMLDivElement>(null);
 
-  // already booted this session? skip the gate (no music auto-start —
-  // browsers require a user gesture for audio anyway)
-  useEffect(() => {
-    try {
-      if (sessionStorage.getItem("grid-entered")) setGone(true);
-    } catch {}
-  }, []);
-
   // lock scroll while loader is up
   useEffect(() => {
     if (!gone) {
@@ -74,7 +66,6 @@ export function BootLoader() {
 
   const enter = () => {
     setExiting(true);
-    try { sessionStorage.setItem("grid-entered", "1"); } catch {}
     window.dispatchEvent(new Event("grid-enter"));
     window.scrollTo(0, 0);
     setTimeout(() => setGone(true), 900);
