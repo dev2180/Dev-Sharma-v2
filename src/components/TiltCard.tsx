@@ -40,10 +40,10 @@ export function TiltCard({ children, className = "" }: TiltCardProps) {
       // Update inline CSS transforms directly to bypass React render cycle (120 FPS performance lock)
       card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
       card.style.boxShadow = `
-        ${shadowX}px ${shadowY}px 35px rgba(0, 122, 255, 0.25),
+        ${shadowX}px ${shadowY}px 35px rgba(225, 100, 46, 0.25),
         0 25px 50px -12px rgba(0, 0, 0, 0.75)
       `;
-      card.style.borderColor = "rgba(0, 122, 255, 0.35)";
+      card.style.borderColor = "rgba(225, 100, 46, 0.35)";
       
       // Expose cursor coordinates via CSS variables for premium hardware-accelerated spotlight gradients
       card.style.setProperty("--mouse-x", `${absoluteX}px`);

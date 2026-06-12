@@ -47,8 +47,8 @@ export function SpaceCursor() {
         // Expand ring and shift to glowing Electric Blue glass
         gsap.to(ring, {
           scale: 1.6,
-          borderColor: "rgba(0, 122, 255, 0.6)",
-          backgroundColor: "rgba(0, 122, 255, 0.08)",
+          borderColor: "rgba(225, 100, 46, 0.6)",
+          backgroundColor: "rgba(225, 100, 46, 0.08)",
           duration: 0.3,
           ease: "power2.out",
         });
@@ -56,7 +56,7 @@ export function SpaceCursor() {
         // Anchor/minimize central dot and color it blue
         gsap.to(dot, {
           scale: 0.5,
-          backgroundColor: "#007AFF",
+          backgroundColor: "#E1642E",
           duration: 0.3,
           ease: "power2.out",
         });

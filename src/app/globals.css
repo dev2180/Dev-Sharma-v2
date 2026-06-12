@@ -2,19 +2,24 @@
 
 /* ─── Design Tokens ─────────────────────────────────────────────── */
 :root {
-  --color-bg:       #0a0a0a;
-  --color-surface:  rgba(255,255,255,0.04);
-  --color-border:   rgba(255,255,255,0.08);
-  --color-accent:   #007AFF;
-  --color-white:    #ffffff;
+  --color-bg:       #111111;
+  --color-surface:  #141414;
+  --color-border:   #262626;
+  --color-accent:   #E1642E;
+  --color-accent-soft: rgba(225,100,46,0.1);
+  --color-accent-border: rgba(225,100,46,0.35);
+  --color-white:    #ececec;
+  --color-text-dim: #9a9a9a;
+  --color-text-mute:#787878;
 
-  --radius-card:    2rem;
-  --radius-inner:   calc(2rem - 6px);
+  --radius-card:    0.875rem;
+  --radius-inner:   calc(0.875rem - 4px);
+  --radius-btn:     7px;
   --radius-pill:    9999px;
 
-  /* Fluid clamp typography */
-  --text-hero:      clamp(3.5rem, 8vw, 8rem);
-  --text-section:   clamp(2rem, 5vw, 4rem);
+  /* Fluid clamp typography — LatentGraph scale (h1 ~68px, h2 ~44px) */
+  --text-hero:      clamp(2.75rem, 5.5vw, 4.25rem);
+  --text-section:   clamp(1.9rem, 3.4vw, 2.75rem);
   --text-body:      clamp(0.9rem, 1.2vw, 1.05rem);
 }
 
@@ -44,25 +49,35 @@ body {
   color: #fff;
 }
 
+/* Headings inherit the LatentGraph display treatment */
+h1, h2, h3 {
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: -0.03em;
+}
+
 /* ─── Cursor ─────────────────────────────────────────────────────── */
 * { cursor: none; }
 
-/* ─── Double-Bezel Card System (Liquid Glass Refraction) ──────────── */
+/* ─── Flat Panel Card System (LatentGraph) ─────────────────────────── */
 .card-shell {
-  background: rgba(255,255,255,0.02);
+  background: rgba(20,20,20,0.82);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
-  padding: 6px;
+  padding: 0;
+  transition: border-color 0.3s ease;
+}
+
+.card-shell:hover {
+  border-color: var(--color-accent-border);
 }
 
 .card-inner {
   position: relative !important;
-  background: rgba(15,15,20,0.65);
+  background: transparent;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-radius: var(--radius-inner);
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 20px 40px -15px rgba(0,0,0,0.5);
+  border-radius: inherit;
+  border: none;
   height: 100%;
   overflow: hidden;
 }
@@ -86,7 +101,7 @@ body {
   padding: 1px;
   background: radial-gradient(
     320px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(0, 122, 255, 0.45),
+    rgba(225, 100, 46, 0.5),
     transparent 80%
   );
   -webkit-mask: 
@@ -112,7 +127,7 @@ body {
   border-radius: inherit;
   background: radial-gradient(
     260px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(0, 122, 255, 0.1),
+    rgba(225, 100, 46, 0.12),
     transparent 80%
   );
   pointer-events: none;
@@ -348,29 +363,25 @@ main {
   z-index: 10 !important;
 }
 
-/* absolute navbar centering lock & styling with premium smooth-entry transitions */
+/* Full-width LatentGraph header: logo left, pill links centre, CTA right */
 .navbar-custom {
   position: fixed !important;
-  top: 1.25rem !important;
+  top: 0 !important;
   left: 0 !important;
   right: 0 !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  width: max-content !important;
+  width: 100% !important;
   z-index: 9999 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   box-sizing: border-box !important;
-  padding: 0.625rem 1.25rem !important;
-  border-radius: 9999px !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  padding: 0.875rem 1.75rem !important;
+  background: rgba(17, 17, 17, 0.72) !important;
+  border-bottom: 1px solid rgba(38, 38, 38, 0.7) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
   gap: 1.5rem !important;
-  
+
   /* Initial hidden state */
   opacity: 0 !important;
   pointer-events: none !important;
@@ -389,30 +400,47 @@ main {
 /* Nav Logo */
 .nav-logo {
   font-family: var(--font-display), sans-serif !important;
-  font-size: 1.25rem !important;
-  color: #007AFF !important;
-  letter-spacing: 0.1em !important;
-  font-weight: normal !important;
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: #ececec !important;
+  letter-spacing: -0.02em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
 }
 
-/* Nav Links Container */
+.nav-logo::before {
+  content: "◆";
+  color: var(--color-accent);
+  font-size: 0.9rem;
+}
+
+/* Nav Links Container — centred pill like the reference */
 .nav-links-container {
   display: flex !important;
   align-items: center !important;
-  gap: 1.25rem !important;
-  font-size: 0.75rem !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.12em !important;
+  gap: 0.35rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+  font-family: var(--font-display), sans-serif !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 9999px !important;
+  padding: 0.3rem 0.5rem !important;
 }
 
 .nav-link-item {
-  color: rgba(255, 255, 255, 0.6) !important;
+  color: rgba(236, 236, 236, 0.55) !important;
   text-decoration: none !important;
-  transition: color 0.3s ease !important;
+  transition: color 0.3s ease, background 0.3s ease !important;
+  padding: 0.35rem 0.9rem !important;
+  border-radius: 9999px !important;
 }
 
 .nav-link-item:hover {
   color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.07) !important;
 }
 
 @media (max-width: 767px) {
@@ -426,32 +454,30 @@ main {
   display: inline-flex !important;
   align-items: center !important;
   gap: 0.5rem !important;
-  padding-left: 0.875rem !important;
-  padding-right: 0.375rem !important;
-  padding-top: 0.375rem !important;
-  padding-bottom: 0.375rem !important;
+  padding: 0.45rem 0.6rem 0.45rem 1.1rem !important;
   border-radius: 9999px !important;
-  background-color: rgba(0, 122, 255, 0.1) !important;
-  border: 1px solid rgba(0, 122, 255, 0.3) !important;
-  color: #007AFF !important;
-  font-size: 0.75rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.05em !important;
+  background-color: var(--color-accent) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-family: var(--font-display), sans-serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em !important;
   text-decoration: none !important;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .nav-resume-btn:hover {
-  background-color: rgba(0, 122, 255, 0.25) !important;
-  border-color: rgba(0, 122, 255, 0.6) !important;
+  background-color: #f07a42 !important;
   transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(225, 100, 46, 0.35) !important;
 }
 
 .nav-resume-btn-icon {
   width: 1.25rem !important;
   height: 1.25rem !important;
   border-radius: 9999px !important;
-  background-color: rgba(0, 122, 255, 0.2) !important;
+  background-color: rgba(0, 0, 0, 0.18) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -474,18 +500,200 @@ main {
 @keyframes breath {
   0% {
     transform: scale(1) translateZ(0);
-    text-shadow: 0 0 0px rgba(0, 122, 255, 0);
+    text-shadow: 0 0 0px rgba(225, 100, 46, 0);
     filter: brightness(1);
   }
   50% {
     transform: scale(1.06) translateZ(0);
-    text-shadow: 0 0 20px rgba(0, 122, 255, 0.4), 0 0 40px rgba(0, 122, 255, 0.15);
+    text-shadow: 0 0 20px rgba(225, 100, 46, 0.4), 0 0 40px rgba(225, 100, 46, 0.15);
     filter: brightness(1.15);
   }
   100% {
     transform: scale(1.02) translateZ(0);
-    text-shadow: 0 0 10px rgba(0, 122, 255, 0.2);
+    text-shadow: 0 0 10px rgba(225, 100, 46, 0.2);
     filter: brightness(1.05);
   }
+}
+
+/* ─── LatentGraph design-language utilities ──────────────────────── */
+
+/* Eyebrow label: orange dash + spaced uppercase */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-accent);
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 1.4rem;
+  height: 2px;
+  background: var(--color-accent);
+  flex-shrink: 0;
+}
+
+/* Primary solid-orange button (radius 7px like the reference) */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-btn);
+  background: var(--color-accent);
+  color: #ffffff;
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-primary:hover {
+  background: #f07a42;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 26px rgba(225, 100, 46, 0.35);
+}
+
+/* Ghost orange-outline button */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-btn);
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent-border);
+  color: var(--color-accent);
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-ghost:hover {
+  background: rgba(225, 100, 46, 0.16);
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+/* Neutral dark button */
+.btn-neutral {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-btn);
+  background: rgba(20, 20, 20, 0.9);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-mute);
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-neutral:hover {
+  color: #ececec;
+  border-color: #3a3a3a;
+  transform: translateY(-1px);
+}
+
+/* Hero stats band: bordered panel, 4 columns with vertical dividers */
+.stats-band {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: rgba(20, 20, 20, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+.stat-cell {
+  padding: 1.75rem 1.75rem 1.5rem;
+  border-right: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.stat-cell:last-child {
+  border-right: none;
+}
+
+.stat-number {
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--color-accent);
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ececec;
+  margin-top: 0.4rem;
+}
+
+.stat-sub {
+  font-size: 0.78rem;
+  color: var(--color-text-mute);
+  line-height: 1.5;
+  margin-top: 0.3rem;
+}
+
+@media (max-width: 767px) {
+  .stats-band {
+    grid-template-columns: 1fr 1fr;
+  }
+  .stat-cell {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .stat-cell:nth-child(even) {
+    border-right: none;
+  }
+  .stat-cell:nth-child(n+3) {
+    border-bottom: none;
+  }
+}
+
+/* Typewriter caret */
+.typewriter-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--color-accent);
+  margin-left: 3px;
+  vertical-align: text-bottom;
+  animation: caret-blink 1s step-end infinite;
+}
+
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Subtle blueprint grid background for feature sections */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 56px 56px;
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Outfit } from "next/font/google";
+import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import { SmoothScroller } from "@/components/SmoothScroller";
 import { GsapController } from "@/components/GsapController";
@@ -7,13 +7,13 @@ import { CanvasBackground } from "@/components/CanvasBackground";
 import { SpaceCursor } from "@/components/SpaceCursor";
 import { AudioPlayer } from "@/components/AudioPlayer";
 
-const bebasNeue = Bebas_Neue({
-  weight: "400",
+const spaceGrotesk = Space_Grotesk({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   variable: "--font-display",
 });
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-body",
 });
@@ -90,7 +90,7 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={`${bebasNeue.variable} ${outfit.variable} font-body antialiased bg-black text-white selection:bg-white selection:text-black cursor-none`}
+        className={`${spaceGrotesk.variable} ${inter.variable} font-body antialiased bg-black text-white selection:bg-white selection:text-black cursor-none`}
       >
         <SpaceCursor />
         <AudioPlayer />

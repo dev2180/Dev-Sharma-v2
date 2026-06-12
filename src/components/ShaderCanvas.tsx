@@ -129,9 +129,9 @@ export function ShaderCanvas({ type }: ShaderCanvasProps) {
           
           // 4. Chromatic morphing (the colors themselves breathe and rotate continuously)
           float colorCycle = sin(t * 0.4) * 0.5 + 0.5;
-          vec3 electricBlue = vec3(0.0, 0.48, 1.0);
-          vec3 cyberCyan = vec3(0.0, 0.88, 1.0);
-          vec3 magentaViolet = vec3(0.68, 0.05, 1.0);
+          vec3 electricBlue = vec3(0.88, 0.39, 0.18);
+          vec3 cyberCyan = vec3(1.0, 0.62, 0.24);
+          vec3 magentaViolet = vec3(0.82, 0.18, 0.10);
           
           // Breathe colors over time and spatial flow density
           vec3 currentColor = mix(electricBlue, magentaViolet, colorCycle);
@@ -190,7 +190,7 @@ export function ShaderCanvas({ type }: ShaderCanvasProps) {
           float hoverActivation = smoothstep(0.42, 0.0, mDist);
           
           // Render falling bytes and coordinate crosshair lasers
-          vec3 matrixColor = vec3(0.0, 0.48, 1.0); // Electric Blue
+          vec3 matrixColor = vec3(0.88, 0.39, 0.18); // Electric Blue
           
           // Boosted dynamic intensity values
           float intensity = (pulse * 0.28) + (scanLines * hoverActivation * 1.6);
@@ -229,7 +229,7 @@ export function ShaderCanvas({ type }: ShaderCanvasProps) {
           float ringMask = sin(distToCenter * 45.0 - u_time * 1.5) * 0.5 + 0.5;
           float dynamicRing = smoothstep(0.03, 0.0, abs(distToCenter - 0.28)) * ringMask * 0.28;
           
-          vec3 electricBlue = vec3(0.0, 0.48, 1.0);
+          vec3 electricBlue = vec3(0.88, 0.39, 0.18);
           
           // Pure additive light mapping
           float totalGlow = (coreGlow * 0.22) + (dynamicRing * 0.95) + (gravityForce * 0.08);
@@ -297,7 +297,7 @@ export function ShaderCanvas({ type }: ShaderCanvasProps) {
             }
           }
           
-          vec3 nodeColor = vec3(0.0, 0.48, 1.0); // Electric Blue
+          vec3 nodeColor = vec3(0.88, 0.39, 0.18); // Electric Blue
           
           // Attenuate node glows in relative proximity to cursor coordinates
           float mouseProximity = smoothstep(0.45, 0.0, distance(v_uv, u_mouse));

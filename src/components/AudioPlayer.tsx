@@ -148,14 +148,14 @@ export function AudioPlayer() {
           className={`fixed inset-0 w-screen h-screen z-[99990] bg-[#030303] flex flex-col items-center justify-center select-none pointer-events-auto transition-all duration-800 ease-[cubic-bezier(0.32,0.72,0,1)] ${isExiting ? "opacity-0 scale-[1.06] pointer-events-none" : "opacity-100 scale-100"
             }`}
         >
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,122,255,0.06)_0%,transparent_60%)] pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(225,100,46,0.06)_0%,transparent_60%)] pointer-events-none" />
           <div
             className="absolute inset-0 pointer-events-none opacity-[0.2] mix-blend-overlay"
             style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
           />
 
           <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-lg">
-            <p className="text-[10px] font-bold tracking-[0.3em] text-[#007AFF] uppercase animate-pulse mb-6">
+            <p className="text-[10px] font-bold tracking-[0.3em] text-[#E1642E] uppercase animate-pulse mb-6">
               Dev Sharma
             </p>
 
@@ -172,7 +172,7 @@ export function AudioPlayer() {
                 </div>
                 <div className="w-full h-[1px] bg-white/10 overflow-hidden relative rounded-full">
                   <div
-                    className={`h-full bg-[#007AFF] transition-all duration-300 ease-out shadow-[0_0_8px_rgba(0,122,255,0.8)] ${progress >= 100 && !audioLoaded ? "animate-pulse w-full" : ""
+                    className={`h-full bg-[#E1642E] transition-all duration-300 ease-out shadow-[0_0_8px_rgba(225,100,46,0.8)] ${progress >= 100 && !audioLoaded ? "animate-pulse w-full" : ""
                       }`}
                     style={{ width: progress < 100 ? `${progress}%` : "100%" }}
                   />
@@ -200,7 +200,7 @@ export function AudioPlayer() {
                     style={{
                       padding: "0.875rem 2rem",
                       borderRadius: "9999px",
-                      backgroundColor: "#007AFF",
+                      backgroundColor: "#E1642E",
                       color: "#ffffff",
                       fontSize: "0.75rem",
                       fontWeight: 800,
@@ -211,7 +211,7 @@ export function AudioPlayer() {
                       gap: "0.75rem",
                       border: "none",
                       outline: "none",
-                      boxShadow: "0 4px 20px rgba(0, 122, 255, 0.3)",
+                      boxShadow: "0 4px 20px rgba(225, 100, 46, 0.3)",
                       transition: "all 0.3s ease",
                     }}
                     className="group hover:bg-white hover:text-black cursor-none"
@@ -238,7 +238,7 @@ export function AudioPlayer() {
                 </div>
 
                 <span className="text-[9px] font-mono text-white/30 tracking-[0.2em] uppercase mt-2 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#007AFF] animate-ping" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#E1642E] animate-ping" />
                   Headphones & Ambient Audio Recommended
                 </span>
               </div>
@@ -254,13 +254,13 @@ export function AudioPlayer() {
           className="fixed bottom-6 right-6 z-50 w-11 h-11 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl flex items-center justify-center hover:bg-white/10 transition-all duration-300 active:scale-95 group clickable"
         >
           {isBuffering ? (
-            <span className="w-4 h-4 rounded-full border-2 border-t-transparent border-[#007AFF] animate-spin" />
+            <span className="w-4 h-4 rounded-full border-2 border-t-transparent border-[#E1642E] animate-spin" />
           ) : playing ? (
             <span className="flex items-end gap-[3px] h-4">
-              <span className="w-[3px] rounded-full bg-[#007AFF] animate-[soundbar_0.8s_ease-in-out_infinite_alternate]" style={{ height: "60%" }} />
-              <span className="w-[3px] rounded-full bg-[#007AFF] animate-[soundbar_0.8s_ease-in-out_infinite_alternate_0.2s]" style={{ height: "100%" }} />
-              <span className="w-[3px] rounded-full bg-[#007AFF] animate-[soundbar_0.8s_ease-in-out_infinite_alternate_0.4s]" style={{ height: "40%" }} />
-              <span className="w-[3px] rounded-full bg-[#007AFF] animate-[soundbar_0.8s_ease-in-out_infinite_alternate_0.1s]" style={{ height: "80%" }} />
+              <span className="w-[3px] rounded-full bg-[#E1642E] animate-[soundbar_0.8s_ease-in-out_infinite_alternate]" style={{ height: "60%" }} />
+              <span className="w-[3px] rounded-full bg-[#E1642E] animate-[soundbar_0.8s_ease-in-out_infinite_alternate_0.2s]" style={{ height: "100%" }} />
+              <span className="w-[3px] rounded-full bg-[#E1642E] animate-[soundbar_0.8s_ease-in-out_infinite_alternate_0.4s]" style={{ height: "40%" }} />
+              <span className="w-[3px] rounded-full bg-[#E1642E] animate-[soundbar_0.8s_ease-in-out_infinite_alternate_0.1s]" style={{ height: "80%" }} />
             </span>
           ) : (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/50 group-hover:text-white transition-colors duration-300">
