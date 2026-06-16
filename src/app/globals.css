@@ -332,6 +332,31 @@ h1, h2, h3, h4 {
   transform: translateY(0);
 }
 
+/* Brand must never wrap (it was breaking letter-by-letter on small screens). */
+.nav-brand {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Mobile header: the center anchor menu can't fit, so drop it on a scroll-based
+   single-page site and keep a slim brand + actions row. */
+@media (max-width: 700px) {
+  .navbar-grid {
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+  }
+  .navbar-grid .nav-links,
+  .navbar-grid .nav-social {
+    display: none !important;
+  }
+  .nav-actions {
+    gap: 0.5rem !important;
+  }
+  .nav-actions .btn-grid {
+    white-space: nowrap;
+  }
+}
+
 /* GTA-menu nav items: instant full-block highlight, inverted text */
 .nav-link-grid {
   position: relative;
@@ -372,6 +397,21 @@ h1, h2, h3, h4 {
 .reveal {
   opacity: 0;
   transform: translateY(36px);
+  filter: blur(6px);
+  /* While hidden, never intercept clicks — prevents invisible-but-clickable
+     sections from firing links (e.g. ghost LinkedIn clicks). */
+  pointer-events: none;
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  pointer-events: auto;
 }
 
 /* ─── Marquee ────────────────────────────────────────────────── */

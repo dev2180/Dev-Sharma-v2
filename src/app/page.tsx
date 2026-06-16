@@ -33,8 +33,8 @@ const CAREER_LOG = [
   {
     role: "GenAI Engineer Intern",
     company: "Astroraaga",
-    period: "APR 2026 — PRESENT",
-    status: "ACTIVE",
+    period: "APR 2026 — JUN 2026",
+    status: "COMPLETE",
     bullets: [
       "Restructured LangGraph pipeline into modular architecture — −60% debug time, +40% dev velocity.",
       "Optimized production GenAI pipeline via prompt engineering & token budgeting — −50% latency, −70% cost.",
@@ -97,7 +97,7 @@ function Hero() {
           </h1>
           <p className="hero-sub" style={{ color: "var(--text-dim)", fontSize: "1.05rem", maxWidth: "34rem", lineHeight: 1.7, marginBottom: "0.9rem" }}>
             Agentic pipelines, RAG systems and production GenAI workflows —
-            currently running live ops at <strong style={{ color: "var(--primary)" }}>Astroraaga</strong>.
+            built to run <strong style={{ color: "var(--primary)" }}>in production</strong>, not just in notebooks.
           </p>
           <div className="hero-sub" style={{ minHeight: "1.7rem", marginBottom: "2.6rem" }}>
             <Typewriter />
@@ -193,15 +193,27 @@ function Demo() {
     <section id="demo" className="w-full max-w-5xl mx-auto px-6 py-32">
       <p className="reveal hud-label" style={{ marginBottom: "1.1rem" }}>MISSION CAPTURE // LIVE FOOTAGE</p>
       <h2 className="reveal font-display" style={{ fontSize: "var(--text-section)", fontWeight: 800, marginBottom: "0.9rem" }}>
-        WATCH THE ENGINE <span className="neon">RUN.</span>
+        WATCH THE ENGINES <span className="neon">RUN.</span>
       </h2>
-      <p className="reveal" style={{ color: "var(--text-dim)", maxWidth: "36rem", lineHeight: 1.7, marginBottom: "2.5rem" }}>
-        A captured session of D-RAG answering a question against real PDFs —
-        query expansion, hybrid retrieval, reranking, compression and a grounded,
-        cited answer. Press play.
+      <p className="reveal" style={{ color: "var(--text-dim)", maxWidth: "36rem", lineHeight: 1.7, marginBottom: "3rem" }}>
+        Two captured sessions — no slides, no mockups. Real terminals, real
+        pipelines, running end to end. Press play.
+      </p>
+
+      {/* Capture 01 — D-RAG */}
+      <p className="reveal font-mono" style={{ fontSize: "0.62rem", letterSpacing: "0.26em", color: "var(--cyan)", marginBottom: "0.9rem" }}>
+        ▸ CAPTURE 01 — D-RAG · grounded PDF Q&amp;A · query → retrieval → cited answer
+      </p>
+      <div className="reveal" style={{ marginBottom: "3.5rem" }}>
+        <DemoPlayer variant="d-rag" />
+      </div>
+
+      {/* Capture 02 — DeadCrypt */}
+      <p className="reveal font-mono" style={{ fontSize: "0.62rem", letterSpacing: "0.26em", color: "var(--cyan)", marginBottom: "0.9rem" }}>
+        ▸ CAPTURE 02 — DEADCRYPT · file → lossless TV-static video → byte-identical file
       </p>
       <div className="reveal">
-        <DemoPlayer />
+        <DemoPlayer variant="deadcrypt" />
       </div>
     </section>
   );

@@ -3,9 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Simulated screen-recording of the D-RAG engine answering a query.
+ * Simulated screen-recording of an engine running a real session.
  * Behaves like a video: play / pause / restart / seek bar — but it's
  * a live-typed terminal session with keystroke SFX. Zero megabytes.
+ *
+ * Two captures share the same player:
+ *   • "d-rag"     — the RAG engine answering a grounded query
+ *   • "deadcrypt" — a file encoded into lossless TV-static video, then
+ *                   decoded back byte-for-byte
  */
 
 interface Frame {
@@ -15,7 +20,13 @@ interface Frame {
   typed?: boolean;    // typewriter-animate this line
 }
 
-const SCRIPT: Frame[] = [
+interface Capture {
+  title: string;      // titlebar label
+  duration: number;   // total ms
+  script: Frame[];
+}
+
+const DRAG_SCRIPT: Frame[] = [
   { t: 0,     text: "$ python cli.py", typed: true, color: "var(--text)" },
   { t: 900,   text: "[boot] embedder all-MiniLM-L6-v2 loaded · 384-dim", color: "var(--text-mute)" },
   { t: 1450,  text: "[boot] qdrant collection 'docs' ready · hybrid dense+sparse", color: "var(--text-mute)" },
@@ -34,9 +45,41 @@ const SCRIPT: Frame[] = [
   { t: 12700, text: "metrics    retrieve 142ms · rerank 89ms · llm 1.2s · coverage 87%", color: "var(--primary)" },
 ];
 
-const DURATION = 13600;
+const DEADCRYPT_SCRIPT: Frame[] = [
+  { t: 0,     text: "$ deadcrypt encode secret.zip --resolution 1080p", typed: true, color: "var(--text)" },
+  { t: 1100,  text: "[boot]    DeadCrypt v1 · FFV1 lossless · ffmpeg on PATH", color: "var(--text-mute)" },
+  { t: 1700,  text: "[boot]    1080p · 1920x1080 · 5.93 MB payload / frame", color: "var(--text-mute)" },
+  { t: 2300,  text: "[read]    secret.zip → 4.21 MB", color: "var(--text-dim)" },
+  { t: 3000,  text: "[header]  DCRT·v1 · name=secret.zip · size=4,413,952 B", color: "var(--text-dim)" },
+  { t: 3800,  text: "[framing] bytes → W×H×3 RGB pixels · 1 frame · zero-padded", color: "var(--text-dim)" },
+  { t: 4600,  text: "[render]  static frame written → frame_000001.png", color: "var(--text-dim)" },
+  { t: 5400,  text: "[ffmpeg]  mux FFV1 → encoded/secret.zip.mkv", color: "var(--text-dim)" },
+  { t: 6200,  text: "Encoded -> encoded/secret.zip.mkv  (4.20 MB)", color: "var(--green)", typed: true },
+  { t: 7900,  text: "", },
+  { t: 8000,  text: "$ deadcrypt decode encoded/secret.zip.mkv", typed: true, color: "var(--cyan)" },
+  { t: 9600,  text: "[ffmpeg]  extract frames → 1 frame", color: "var(--text-dim)" },
+  { t: 10300, text: "[pixels]  RGB channels → byte stream · padding trimmed", color: "var(--text-dim)" },
+  { t: 11000, text: "[header]  magic OK · secret.zip · 4,413,952 bytes", color: "var(--text-dim)" },
+  { t: 11800, text: "Recovered -> decoded/secret.zip  (4.21 MB)", color: "var(--green)", typed: true },
+  { t: 13400, text: "verify    sha256 match · byte-for-byte identical ✓", color: "var(--primary)" },
+];
 
-export function DemoPlayer() {
+const CAPTURES: Record<string, Capture> = {
+  "d-rag": {
+    title: "d-rag — live session capture",
+    duration: 13600,
+    script: DRAG_SCRIPT,
+  },
+  deadcrypt: {
+    title: "deadcrypt — live session capture",
+    duration: 14800,
+    script: DEADCRYPT_SCRIPT,
+  },
+};
+
+export function DemoPlayer({ variant = "d-rag" }: { variant?: "d-rag" | "deadcrypt" }) {
+  const { title, duration: DURATION, script: SCRIPT } = CAPTURES[variant] ?? CAPTURES["d-rag"];
+
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
   const rafRef = useRef(0);
@@ -60,7 +103,7 @@ export function DemoPlayer() {
     };
     rafRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [playing]);
+  }, [playing, DURATION]);
 
   // typing SFX while a typed line is animating
   useEffect(() => {
@@ -70,7 +113,7 @@ export function DemoPlayer() {
       typeSfxAt.current = time;
       window.dispatchEvent(new CustomEvent("sfx", { detail: "type" }));
     }
-  }, [time, playing]);
+  }, [time, playing, SCRIPT]);
 
   useEffect(() => {
     bodyRef.current?.scrollTo({ top: bodyRef.current.scrollHeight });
@@ -102,7 +145,7 @@ export function DemoPlayer() {
         <span className="terminal-dot" style={{ background: "var(--red)" }} />
         <span className="terminal-dot" style={{ background: "var(--primary)" }} />
         <span className="terminal-dot" style={{ background: "var(--green)" }} />
-        <span style={{ marginLeft: 6 }}>d-rag — live session capture</span>
+        <span style={{ marginLeft: 6 }}>{title}</span>
         <span style={{ marginLeft: "auto", color: "var(--primary)" }}>● REC</span>
       </div>
 

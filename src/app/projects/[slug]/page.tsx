@@ -5,6 +5,7 @@ import { NoiseCanvas } from "@/components/NoiseCanvas";
 import { ShaderCanvas } from "@/components/ShaderCanvas";
 import { ArrowUpRight, GithubLogo } from "@/components/ClientIcons";
 import { DOSSIERS, getDossier } from "@/lib/projects";
+import { asset } from "@/lib/basePath";
 
 export function generateStaticParams() {
   return DOSSIERS.map((d) => ({ slug: d.slug }));
@@ -67,6 +68,41 @@ export default async function DossierPage({ params }: { params: Promise<{ slug: 
           </div>
         </div>
       </section>
+
+      {/* ── FIELD CAPTURE (DeadCrypt only) ───────────────────── */}
+      {d.slug === "deadcrypt" && (
+        <section className="w-full max-w-5xl mx-auto px-6 py-12">
+          <p className="reveal hud-label" style={{ marginBottom: "1.1rem" }}>FIELD CAPTURE // REAL ENCODE</p>
+          <h2 className="reveal font-display" style={{ fontSize: "var(--text-section)", fontWeight: 800, marginBottom: "0.9rem" }}>
+            FILE IN. <span className="neon">STATIC OUT.</span>
+          </h2>
+          <p className="reveal" style={{ color: "var(--text-dim)", maxWidth: "40rem", lineHeight: 1.7, marginBottom: "2rem" }}>
+            A real run of <code>deadcrypt encode</code> — the frames on the right are the
+            actual bytes the encoder writes, played back as lossless TV static.
+            Decode reverses every step, byte-for-byte.
+          </p>
+          <div className="reveal terminal hud-corners" style={{ position: "relative", overflow: "hidden" }}>
+            <span className="hud-c" />
+            <div className="terminal-titlebar">
+              <span className="terminal-dot" style={{ background: "var(--red)" }} />
+              <span className="terminal-dot" style={{ background: "var(--primary)" }} />
+              <span className="terminal-dot" style={{ background: "var(--green)" }} />
+              <span style={{ marginLeft: 6 }}>deadcrypt — field capture</span>
+              <span style={{ marginLeft: "auto", color: "var(--primary)" }}>● REC</span>
+            </div>
+            <video
+              src={asset("/deadcrypt-demo.mp4")}
+              poster={asset("/deadcrypt-demo-poster.png")}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              style={{ display: "block", width: "100%", height: "auto", aspectRatio: "860 / 470", background: "var(--bg)" }}
+            />
+          </div>
+        </section>
+      )}
 
       {/* ── PIPELINE ─────────────────────────────────────────── */}
       <section className="w-full max-w-7xl mx-auto px-6 py-24">

@@ -1,46 +1,22 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
 
+/**
+ * Hero entrance stagger only. Scroll-reveal and stat bars now live in
+ * RevealController (IntersectionObserver). Keyed on pathname so the hero
+ * re-animates when navigating back to the home page.
+ */
 export function GsapController() {
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+  const pathname = usePathname();
 
+  useEffect(() => {
     let ctx: gsap.Context | undefined;
 
     const raf = requestAnimationFrame(() => {
       ctx = gsap.context(() => {
-        // Scroll-reveal: fade + lift + unblur every .reveal element as it enters
-        gsap.utils.toArray<HTMLElement>(".reveal").forEach((el) => {
-          gsap.to(el, {
-            opacity: 1,
-            y: 0,
-            filter: "blur(0px)",
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: el,
-              start: "top 88%",
-              toggleActions: "play none none none",
-            },
-          });
-        });
-
-        // Player stat bars fill when scrolled into view
-        gsap.utils.toArray<HTMLElement>(".stat-anim").forEach((el) => {
-          const v = Number(el.dataset.value || 0);
-          gsap.to(el, {
-            width: `${v}%`,
-            duration: 1.5,
-            ease: "power3.out",
-            delay: 0.6,
-            scrollTrigger: { trigger: el, start: "top 92%" },
-          });
-        });
-
-        // Hero entrance: words + sub + CTAs stagger in once experience starts
         gsap.from(".hero-word", {
           opacity: 0,
           y: 50,
@@ -64,7 +40,7 @@ export function GsapController() {
       cancelAnimationFrame(raf);
       ctx?.revert();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

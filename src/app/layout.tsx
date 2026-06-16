@@ -3,10 +3,12 @@ import { Orbitron, Rajdhani, Share_Tech_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroller } from "@/components/SmoothScroller";
 import { GsapController } from "@/components/GsapController";
+import { RevealController } from "@/components/RevealController";
 import { GridBackground } from "@/components/GridBackground";
 import { SpaceCursor } from "@/components/SpaceCursor";
 import { SoundSystem } from "@/components/SoundSystem";
 import { BootLoader } from "@/components/BootLoader";
+import { asset } from "@/lib/basePath";
 
 const orbitron = Orbitron({
   weight: ["500", "600", "700", "800", "900"],
@@ -29,7 +31,7 @@ const shareTechMono = Share_Tech_Mono({
 export const metadata: Metadata = {
   title: "Dev Sharma — GenAI Engineer",
   description:
-    "GenAI Engineer specialising in agentic pipelines, RAG systems and LangGraph. Currently building production AI workflows at Astroraaga.",
+    "GenAI Engineer specialising in agentic pipelines, RAG systems and LangGraph — grounded retrieval, optimized inference and production GenAI systems built to ship.",
 };
 
 export default function RootLayout({
@@ -40,6 +42,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Warm the DeadCrypt demo into cache during the boot screen, so the
+            project page plays instantly when opened (low-priority prefetch). */}
+        <link rel="prefetch" href={asset("/deadcrypt-demo.mp4")} as="video" />
+        <link rel="prefetch" href={asset("/deadcrypt-demo-poster.png")} as="image" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -80,6 +86,7 @@ export default function RootLayout({
         <GridBackground />
         <SmoothScroller />
         <GsapController />
+        <RevealController />
         {children}
         {/* CRT atmosphere */}
         <div className="scanlines" />
