@@ -42,6 +42,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta
+          name="google-site-verification"
+          content="FeNCSRZOQnG4CZk6pjHUdW-NSasu1uE8BxWzt4tXr80"
+        />
         {/* Warm the DeadCrypt demo into cache during the boot screen, so the
             project page plays instantly when opened (low-priority prefetch). */}
         <link rel="prefetch" href={asset("/deadcrypt-demo.mp4")} as="video" />
